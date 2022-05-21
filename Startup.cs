@@ -1,4 +1,5 @@
-namespace WebApiKalumn
+using Microsoft.EntityFrameworkCore;
+namespace WebApiKalum
 {
     public class Startup
     {
@@ -8,10 +9,28 @@ namespace WebApiKalumn
             this.Configuration = configuration;
         }
 
-        public void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection _services)
         {
-            services.AddControllers();
-            //services.AddDbContext<>
+            _services.AddControllers();
+            _services.AddControllers().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            _services.AddDbContext<KalumDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("defaultConnection")));
+            _services.AddEndpointsApiExplorer();
+            _services.AddSwaggerGen();
+        }
+
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+        if(env.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
+        app.UseHttpsRedirection();
+        app.UseRouting();
+        app.UseAuthorization();
+        app.UseEndpoints(endpoints =>{
+            endpoints.MapControllers();
+        });
         }
     }
 }
