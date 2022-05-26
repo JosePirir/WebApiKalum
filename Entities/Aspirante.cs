@@ -12,6 +12,8 @@ namespace WebApiKalum.Entities
         public string Email {get; set;}
         public string Estatus {get; set;}
         public string CarreraId {get; set;}
+        public string JornadaId {get; set;}
         public virtual CarreraTecnica CarreraTecnica {get; set;}/*Que traiga los aspirantes */
+        public virtual Jornada Jornada {get; set;}
     }
 }/*muchos a uno*/

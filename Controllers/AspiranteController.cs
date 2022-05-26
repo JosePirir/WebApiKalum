@@ -1,4 +1,4 @@
-namespace WebApiKalumn.Controllers
+namespace WebApiKalum.Controllers
 {
     public class Aspirante
     {

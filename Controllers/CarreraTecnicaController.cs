@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using WebApiKalum;
 using WebApiKalum.Entities;
 
-namespace WebApiKalumn.Controllers
+namespace WebApiKalum.Controllers
 {
     [ApiController]
     [Route("v1/KalumManagement/[controller]")]
