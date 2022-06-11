@@ -7,6 +7,7 @@ namespace WebApiKalum
     {
         public DbSet<Jornada> Jornada { get; set; }
         public DbSet<CarreraTecnica> CarreraTecnica { get; set; }
+        public DbSet<Alumno> Alumno { get; set; }
         public DbSet<Aspirante> Aspirante { get; set; }
         public DbSet<ExamenAdmision> ExamenAdmision { get; set; }
         public DbSet<Inscripcion> Inscripcion { get; set; }
@@ -37,10 +38,12 @@ namespace WebApiKalum
                 .HasOne<CarreraTecnica>(a=>a.CarreraTecnica)
                 .WithMany(ct => ct.Aspirantes)
                 .HasForeignKey(a => a.CarreraId);
+
             modelBuilder.Entity<Aspirante>()
                 .HasOne<Jornada>(a=>a.Jornada)/*amarra a jornada con aspirante*/
                 .WithMany(j => j.Aspirantes)/*union de una jornada a muchos aspirantes*/
                 .HasForeignKey(a => a.JornadaId);/*la manera de unir una tabla con las llaves foraneas*/
+                
             modelBuilder.Entity<Aspirante>()
                 .HasOne<ExamenAdmision>(a=>a.ExamenAdmision)
                 .WithMany(ea => ea.Aspirantes)

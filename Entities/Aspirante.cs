@@ -14,10 +14,10 @@ namespace WebApiKalum.Entities
         public string CarreraId {get; set;}
         public string JornadaId {get; set;}
         public string ExamenId {get; set;}
-        public virtual CarreraTecnica CarreraTecnica {get; set;}/*Que traiga los aspirantes */
-        public virtual Jornada Jornada {get; set;}/*si no se pone lista solo llama a uno*/
+        public virtual CarreraTecnica CarreraTecnica {get; set;}/*Que traiga los aspirantes *//*estos son llaves foraneas*/
+        public virtual Jornada Jornada {get; set;}/*si no se pone lista solo llama a uno*//*estos son llaves foraneas*/
         public virtual ExamenAdmision ExamenAdmision {get; set;}/*estos son llaves foraneas*/
-        public virtual List<ResultadoExamenAdmision> ResultadoExamenAdmision {get; set;}
-        public virtual List<InscripcionPago> InscripcionPago { get; set; }
+        public virtual List<ResultadoExamenAdmision> ResultadoExamenAdmision {get; set;}/*estos son llaves foraneas de ResultadoExamenAdmision*/
+        public virtual List<InscripcionPago> InscripcionPago { get; set; }/*estos son llaves foraneas de InscripcionPago*/
     }
 }/*muchos a uno*/
