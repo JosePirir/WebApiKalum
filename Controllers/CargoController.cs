@@ -29,7 +29,7 @@ namespace WebApiKalum.Controllers
                     Logger.LogWarning("No existen cargos");
                     return new NoContentResult();
                 }
-                Logger.LogWarning("No existen Cargos");
+                Logger.LogInformation("Finalizado el proceso de mostrar Cargos");
                 return Ok(cargos);
             }
             [HttpGet("{id}", Name="GetCargo")]

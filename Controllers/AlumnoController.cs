@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc; /*Api Controller y Route*/
 using Microsoft.EntityFrameworkCore;
 using WebApiKalum.Entities;
@@ -10,10 +11,12 @@ namespace WebApiKalum.Controllers
     {
         private readonly KalumDbContext DbContext;
         private readonly ILogger<AlumnoController> Logger;
-        public AlumnoController(KalumDbContext _dbContext, ILogger<AlumnoController> _Logger)
+        private readonly IMapper Mapper;
+        public AlumnoController(KalumDbContext _dbContext, ILogger<AlumnoController> _Logger, IMapper _Mapper)
         {
             this.DbContext = _dbContext;
             this.Logger = _Logger;
+            this.Mapper = _Mapper;
         }
 
         [HttpGet]
@@ -48,5 +51,16 @@ namespace WebApiKalum.Controllers
             Logger.LogInformation("Finalizando el proceso de bsuqueda de forma exitosa.");
             return Ok(alumnos);
         }
+
+        /*
+        [HttpPost]
+        public async Task<ActionResult<Alumno>> Post([FromBody]Alumno value)
+        {
+            Logger.LogDebug("Iniciando proceso de agregar un alumno nuevo");
+            await DbContext.Alumno.AddAsync(value);
+            await DbContext.SaveChangesAsync();
+            Logger.LogInformation("Finalizando Proceso de agregar us alumno");
+            return new CreatedAtRouteResult("GetAlumno", new{id=value.Carne}, value);
+        }*/
     }
-}
+}/*Ultimo cambio*/
