@@ -89,6 +89,7 @@ namespace WebApiKalum.Controllers
             CarreraTecnica carreraTecnica = await DbContext.CarreraTecnica.FirstOrDefaultAsync(ct => ct.CarreraId == id); /*Firstordefault es el primero que encuentre*/
             if(carreraTecnica == null)
             {
+                Logger.LogWarning("No existe la jornada con el ID " + id);
                 return NotFound();
             }
             else
@@ -113,7 +114,7 @@ namespace WebApiKalum.Controllers
             carreraTecnica.Nombre = value.Nombre;
             DbContext.Entry(carreraTecnica).State = EntityState.Modified; /*este objeto lo acabo de modificar ahora hace la actualizacion en la base de datos*/
             await DbContext.SaveChangesAsync();
-            Logger.LogInformation("Los datos han sido actualizados correctamente");
+            Logger.LogInformation($"Los datos del {id} han sido actualizados correctamente");
             return NoContent();
         }
     }

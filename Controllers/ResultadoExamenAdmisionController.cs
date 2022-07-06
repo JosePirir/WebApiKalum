@@ -1,6 +1,10 @@
+using Microsoft.AspNetCore.Mvc;
+
 namespace WebApiKalum.Controllers
 {
-    public class ResultadoExamenAdmisionController
+    [ApiController]
+    [Route("v1/KalumManagement/[controller]")]
+    public class ResultadoExamenAdmisionController : ControllerBase
     {
         
     }
