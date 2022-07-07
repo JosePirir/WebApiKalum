@@ -1,12 +1,16 @@
-namespace WebApiKalum.Entities
+using System.ComponentModel.DataAnnotations;
+
+namespace WebApiKalum.Dtos
 {
-    public class InscripcionPago
+    public class InscripcionPagoCreateDTO
     {
-        public string BoletaPago { get; set; }
+        [Required]
         public string NoExpediente { get; set; }
+        [Required]
         public string Anio { get; set; }
+        [Required]
         public DateTime FechaPago { get; set; }
+        [Required]
         public decimal Monto { get; set; }
-        public virtual Aspirante Aspirantes { get; set; }
     }
 }
