@@ -23,6 +23,7 @@ namespace WebApiKalum.Utilities
             CreateMap<Jornada, JornadaListDTO>();/*listar*/
             CreateMap<ExamenAdmision, ExamenAdmisionGetDTO>();
             CreateMap<ExamenAdmisionCreateDTO, ExamenAdmision>();/*Crear*/
+            CreateMap<ResultadoExamenAdmision, ResultadoExamenAdmisionListDTO>();
         }
     }
 }
