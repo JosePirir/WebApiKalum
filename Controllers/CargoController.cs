@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiKalum;
@@ -11,11 +12,14 @@ namespace WebApiKalum.Controllers
         {
             private readonly KalumDbContext DbContext;
             private readonly ILogger<CargoController> Logger;
-            public CargoController (KalumDbContext _dbContext, ILogger<CargoController> _Logger)
+            private readonly IMapper Mapper;
+            public CargoController (KalumDbContext _dbContext, ILogger<CargoController> _Logger, IMapper _Mapper)
             {
                 this.DbContext = _dbContext;
                 this.Logger = _Logger;
+                this.Mapper = _Mapper;
             }
+            
             [HttpGet]
             public async Task<ActionResult<List<Cargo>>> Get()
             {
@@ -32,6 +36,7 @@ namespace WebApiKalum.Controllers
                 Logger.LogInformation("Finalizado el proceso de mostrar Cargos");
                 return Ok(cargos);
             }
+
             [HttpGet("{id}", Name="GetCargo")]
             public async Task<ActionResult<Cargo>> GetCargo(string id)
             {
@@ -46,4 +51,4 @@ namespace WebApiKalum.Controllers
                 return Ok(cargo);
             }
         }
-    }
+}

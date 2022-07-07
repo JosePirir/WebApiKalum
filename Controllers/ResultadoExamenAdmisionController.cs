@@ -46,10 +46,9 @@ namespace WebApiKalum.Controllers
         [HttpPost]
         public async Task<ActionResult<ResultadoExamenAdmision>> Post([FromBody] ResultadoExamenAdmision value)
         {
-            ResultadoExamenAdmision nuevo = Mapper.Map<ResultadoExamenAdmision>(value);
-            await DbContext.ResultadoExamenAdmision.AddAsync(nuevo);
+            await DbContext.ResultadoExamenAdmision.AddAsync(value);
             await DbContext.SaveChangesAsync();
-            return new CreatedAtRouteResult("GetResultadoExamenAdmision", new{id=nuevo.NoExpediente}, nuevo);
+            return new CreatedAtRouteResult("GetResultadoExamenAdmision", new{id=value.NoExpediente}, value);
         }
 
         [HttpPut("{id}")]
