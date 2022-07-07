@@ -2,6 +2,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiKalum;
+using WebApiKalum.Dtos;
 using WebApiKalum.Entities;
 
 namespace WebApiKalum.Controllers
@@ -49,6 +50,46 @@ namespace WebApiKalum.Controllers
                 }
                 Logger.LogInformation("Finalizado el proceso de busqueda de cargos.");
                 return Ok(cargo);
+            }
+
+            [HttpPost]
+            public async Task<ActionResult<Cargo>> Post([FromBody]CargoCreateDTO value)
+            {
+                Cargo nuevo = Mapper.Map<Cargo>(value);
+                nuevo.CargoId = Guid.NewGuid().ToString().ToUpper();
+                await DbContext.Cargo.AddAsync(nuevo);
+                await DbContext.SaveChangesAsync();
+                return new CreatedAtRouteResult("GetCargo", new{id=nuevo.CargoId}, nuevo);
+            }
+
+            [HttpPut("{id}")]
+            public async Task<ActionResult> Put(string id, [FromBody] CargoCreateDTO value)
+            {
+                Cargo cargo = await DbContext.Cargo.FirstOrDefaultAsync(c => c.CargoId == id);
+                if(cargo == null)
+                {
+                    return BadRequest();
+                }
+                cargo.Descripcion = value.Descripcion;
+                cargo.Prefijo = value.Prefijo;
+                cargo.Monto = value.Monto;
+                cargo.GeneraMora = value.GeneraMora;
+                cargo.PorcentajeMora = value.PorcentajeMora;
+                await DbContext.SaveChangesAsync();
+                return NoContent();
+            }
+
+            [HttpDelete("{id}")]
+            public async Task<ActionResult<Cargo>> Delete(string id)
+            {
+                Cargo cargo = await DbContext.Cargo.FirstOrDefaultAsync(c => c.CargoId == id);
+                if(cargo == null)
+                {
+                    return NotFound();
+                }
+                DbContext.Cargo.Remove(cargo);
+                await DbContext.SaveChangesAsync();
+                return NoContent();
             }
         }
 }
