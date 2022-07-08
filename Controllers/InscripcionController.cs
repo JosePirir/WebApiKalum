@@ -11,7 +11,7 @@ using WebApiKalum.Entities;
 namespace WebApiKalum.Controllers
 {   
     [ApiController]
-    [Route("v1/KalumManagement/[controller]")]
+    [Route("v1/KalumManagement/Inscripciones")]
     public class InscripcionController : ControllerBase
     {
         private readonly KalumDbContext DbContext;
@@ -28,7 +28,9 @@ namespace WebApiKalum.Controllers
             Aspirante aspirante = await DbContext.Aspirante.FirstOrDefaultAsync(a => a.NoExpediente == value.NoExpediente);
             if(aspirante == null)
             {
+                //
                 return NoContent();
+
             }
             CarreraTecnica carreraTecnica = await DbContext.CarreraTecnica.FirstOrDefaultAsync(ct => ct.CarreraId == value.CarreraId);
             if(carreraTecnica == null)
