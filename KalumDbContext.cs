@@ -12,6 +12,7 @@ namespace WebApiKalum
         public DbSet<ExamenAdmision> ExamenAdmision { get; set; }
         public DbSet<Inscripcion> Inscripcion { get; set; }
         public DbSet<Cargo> Cargo { get; set; }
+        public DbSet<CuentaXCobrar> CuentaXCobrar { get; set; }
         public DbSet<ResultadoExamenAdmision> ResultadoExamenAdmision { get; set; }
         public DbSet<InscripcionPago> InscripcionPago { get; set; }
         public DbSet<InversionCarreraTecnica> InversionCarreraTecnica { get; set; }

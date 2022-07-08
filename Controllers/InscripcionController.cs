@@ -1,5 +1,6 @@
 using System.Text;
 using System.Text.Json;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RabbitMQ.Client;
@@ -16,11 +17,13 @@ namespace WebApiKalum.Controllers
     {
         private readonly KalumDbContext DbContext;
         private readonly ILogger<InscripcionController> Logger;
+        private readonly IMapper Mapper;
 
-        public InscripcionController(KalumDbContext _DbContext, ILogger<InscripcionController> _Logger)
+        public InscripcionController(KalumDbContext _DbContext, ILogger<InscripcionController> _Logger, IMapper _Mapper)
         {
             this.Logger = _Logger;
             this.DbContext = _DbContext;
+            this.Mapper = _Mapper;
         }
         [HttpPost("Enrollments")]
         public async Task<ActionResult<ResponseEnrollmentDTO>>EnrollmentCreateAsync([FromBody] EnrollmentDTO value)
@@ -73,7 +76,7 @@ namespace WebApiKalum.Controllers
             }
             catch(Exception e)
             {
-                Logger.LogError("e.Message");
+                Logger.LogError(e.Message);
             }
             finally
             {
@@ -83,5 +86,29 @@ namespace WebApiKalum.Controllers
 
             return proceso;
         }
+
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<InscripcionListDTO>>> Get()
+    {
+        List<Inscripcion> inscripcion = await DbContext.Inscripcion.Include(i => i.CarreraTecnica).Include(i=>i.Jornada).Include(i=>i.Alumnos).ToListAsync();
+        if(inscripcion == null || inscripcion.Count == 0)
+        {
+            return new NoContentResult();
+        }
+        List<InscripcionListDTO> resumen = Mapper.Map<List<InscripcionListDTO>>(inscripcion);
+        return Ok(resumen);
+    }
+
+    [HttpGet ("{id}", Name="GetInscripcion")]
+    public async Task<ActionResult<Inscripcion>> GetInscripcion(string id)
+    {
+        var inscripcion = await DbContext.Inscripcion.Include(i => i.CarreraTecnica).Include(i => i.Jornada).Include(i => i.Alumnos).FirstOrDefaultAsync(i => i.InscripcionId == id);
+        if(inscripcion == null)
+        {
+            return new NoContentResult();
+        }
+        return Ok(inscripcion);
+    }
+
     }
 }

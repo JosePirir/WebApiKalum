@@ -28,6 +28,11 @@ namespace WebApiKalum.Utilities
             CreateMap<CargoCreateDTO, Cargo>();
             CreateMap<InscripcionPagoCreateDTO, InscripcionPago>();
             CreateMap<InscripcionPagoUpdateDTO, InscripcionPago>();
+            CreateMap<CuentaXCobrar, CuentaXCobrarListDTO>();
+            CreateMap<CuentaXCobrarListDTO, CuentaXCobrar>();
+            CreateMap<Cargo, CargoCreateDTO>();
+            CreateMap<Alumno, AlumnoListDTO>();
+            CreateMap<Inscripcion, InscripcionListDTO>();
         }
     }
 }
