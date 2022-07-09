@@ -66,3 +66,4 @@ C:\Users\josep\Documents\Aprendiendo .net\proyectos\prod\WebApiKalum\obj\Debug\n
 C:\Users\josep\Documents\Aprendiendo .net\proyectos\prod\WebApiKalum\obj\Debug\net6.0\ref\WebApiKalum.dll
 C:\Users\josep\Documents\Aprendiendo .net\proyectos\prod\WebApiKalum\obj\Debug\net6.0\WebApiKalum.pdb
 C:\Users\josep\Documents\Aprendiendo .net\proyectos\prod\WebApiKalum\obj\Debug\net6.0\WebApiKalum.genruntimeconfig.cache
+C:\Users\josep\Documents\Aprendiendo .net\proyectos\prod\WebApiKalum\bin\Debug\net6.0\Postman\Kalum.postman_collection.json
