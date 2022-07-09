@@ -7,7 +7,7 @@ namespace WebApiKalum.Entities
     public class Aspirante //: IValidatableObject
     {
         [Required(ErrorMessage ="El campo {0} es requerido")]
-        [StringLength(11, MinimumLength = 11, ErrorMessage =" El campo número de expediente debe de ser de 11 caracteres")]
+        [StringLength(12, MinimumLength = 11, ErrorMessage =" El campo número de expediente debe de ser de 12 caracteres")]
         [NoExpediente]
         public string NoExpediente {get; set;}
         [Required(ErrorMessage ="El campo {0} es requerido")]
