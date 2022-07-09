@@ -62,5 +62,35 @@ namespace WebApiKalum.Controllers
             Logger.LogInformation("Finalizando Proceso de agregar us alumno");
             return new CreatedAtRouteResult("GetAlumno", new{id=value.Carne}, value);
         }*/
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult> Put(string id, [FromBody] Alumno value)
+        {
+            Alumno alumno = await DbContext.Alumno.Include(a2 => a2.Inscripcion).Include(a2 => a2.CuentaXCobrar).FirstOrDefaultAsync(a2=>a2.Carne == id);
+            if(alumno == null)
+            {
+                return BadRequest();
+            }
+            alumno.Apellidos = value.Apellidos;
+            alumno.Nombres = value.Nombres;
+            alumno.Direccion = value.Direccion;
+            alumno.Telefono = value.Telefono;
+            DbContext.Entry(alumno).State = EntityState.Modified;
+            await DbContext.SaveChangesAsync();
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<Alumno>> Delete(string id)
+        {
+            Alumno alumno = await DbContext.Alumno.FirstOrDefaultAsync(a2=>a2.Carne == id);
+            if(alumno == null)
+            {
+                return NotFound();
+            }
+            DbContext.Alumno.Remove(alumno);
+            await DbContext.SaveChangesAsync();
+            return NoContent();
+        }
     }
-}/*Ultimo cambio*/
+}

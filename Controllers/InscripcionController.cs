@@ -110,5 +110,32 @@ namespace WebApiKalum.Controllers
         return Ok(inscripcion);
     }
 
+    [HttpPut("{id}")]
+    public async Task<ActionResult> Put(string id, [FromBody] Inscripcion value)
+    {
+        Inscripcion inscripcion = await DbContext.Inscripcion.FirstOrDefaultAsync(i => i.InscripcionId == id);
+        if(inscripcion == null)
+        {
+            return BadRequest();
+        }
+        inscripcion.Ciclo = value.Ciclo;
+        inscripcion.FechaInscripcion = value.FechaInscripcion;
+        DbContext.Entry(inscripcion).State = EntityState.Modified;
+        await DbContext.SaveChangesAsync();
+        return NoContent();
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<ActionResult<Inscripcion>> Delete(string id)
+    {
+        Inscripcion inscripcion = await DbContext.Inscripcion.FirstOrDefaultAsync(i => i.InscripcionId == id);
+        if(inscripcion == null)
+        {
+            return NotFound();
+        }
+        DbContext.Inscripcion.Remove(inscripcion);
+        await DbContext.SaveChangesAsync();
+        return NoContent();
+    }
     }
 }

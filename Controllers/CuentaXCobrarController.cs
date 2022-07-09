@@ -45,5 +45,35 @@ namespace WebApiKalum.Controllers
             }
             return Ok(cuenta);
         }
+        [HttpPut("{id}")]
+        public async Task<ActionResult> Put(string id, [FromBody] CuentaXCobrar value)
+        {
+            CuentaXCobrar cuenta = await DbContext.CuentaXCobrar.Include(cxc => cxc.Alumnos).Include(cxc => cxc.Cargos).FirstOrDefaultAsync(cxc => cxc.Carne == id);
+            if(cuenta == null)
+            {
+                return BadRequest();
+            }
+            cuenta.Descripcion = value.Descripcion;
+            cuenta.FechaCargo = value.FechaCargo;
+            cuenta.FechaAplica = value.FechaAplica;
+            cuenta.Monto = value.Monto;
+            cuenta.Mora = value.Mora;
+            cuenta.Descuento = value.Descuento;
+            DbContext.Entry(cuenta).State = EntityState.Modified;
+            await DbContext.SaveChangesAsync();
+            return NoContent();
+        }
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<CuentaXCobrar>> Delete(string id)
+        {
+            CuentaXCobrar cuenta = await DbContext.CuentaXCobrar.FirstOrDefaultAsync(cxc => cxc.Carne == id);
+            if(cuenta == null)
+            {
+                return NotFound();
+            }
+            DbContext.CuentaXCobrar.Remove(cuenta);
+            await DbContext.SaveChangesAsync();
+            return NoContent();
+        }
     }
 }
