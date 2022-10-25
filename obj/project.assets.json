@@ -2313,11 +2313,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\josep\\Documents\\Aprendiendo .net\\proyectos\\prod\\WebApiKalum\\WebApiKalum.csproj",
+      "projectUniqueName": "C:\\Users\\josep\\Documents\\Aprendiendo Backend .net\\proyectos\\prod\\WebApiKalum\\WebApiKalum.csproj",
       "projectName": "WebApiKalum",
-      "projectPath": "C:\\Users\\josep\\Documents\\Aprendiendo .net\\proyectos\\prod\\WebApiKalum\\WebApiKalum.csproj",
+      "projectPath": "C:\\Users\\josep\\Documents\\Aprendiendo Backend .net\\proyectos\\prod\\WebApiKalum\\WebApiKalum.csproj",
       "packagesPath": "C:\\Users\\josep\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\josep\\Documents\\Aprendiendo .net\\proyectos\\prod\\WebApiKalum\\obj\\",
+      "outputPath": "C:\\Users\\josep\\Documents\\Aprendiendo Backend .net\\proyectos\\prod\\WebApiKalum\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\josep\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -2389,7 +2389,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.106\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.110\\RuntimeIdentifierGraph.json"
       }
     }
   }

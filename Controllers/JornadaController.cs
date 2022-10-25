@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using WebApiKalum;
 using WebApiKalum.Dtos;
 using WebApiKalum.Entities;
+using WebApiKalum.Utilities;
 
 namespace WebApiKalum.Controllers
 { 
@@ -36,6 +37,22 @@ namespace WebApiKalum.Controllers
             List<JornadaListDTO> jornadaListDTO = Mapper.Map<List<JornadaListDTO>>(jornadas);
             Logger.LogInformation("Se ejecuto la petición de forma exitosa.");
             return Ok(jornadaListDTO);
+        }
+
+        [HttpGet("page/{page}")]
+        public async Task<ActionResult<IEnumerable<Jornada>>> GetPaginacion(int page)
+        {
+            var queryable = this.DbContext.Jornada.Include(j => j.Aspirantes).Include(j => j.Inscripciones).AsQueryable();/*se va a ejectuar despues*/
+            var paginacion = new HttpResponsePaginacion<Jornada>(queryable,page);
+            if(paginacion.Content == null && paginacion.Content.Count == 0)
+            {
+                Logger.LogWarning("No existen Jornadas");
+                return NoContent();
+            }
+            else
+            {
+                return Ok(paginacion);
+            }
         }
 
         [HttpGet("{id}", Name="GetJornada")]
