@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using WebApiKalum.Dtos;
 using WebApiKalum.Entities;
 using WebApiKalum.Utilities;
+using WebApiKalum.Services;
 
 namespace WebApiKalum.Controllers
 {
@@ -14,11 +15,14 @@ namespace WebApiKalum.Controllers
         private readonly KalumDbContext DbContext;
         private readonly ILogger<AspiranteController> Logger;
         private readonly IMapper Mapper;
-        public AspiranteController(KalumDbContext _dbContext, ILogger<AspiranteController> _Logger, IMapper _Mapper)
+        private readonly IUtilsService UtilsService;
+
+        public AspiranteController(KalumDbContext _dbContext, ILogger<AspiranteController> _Logger, IMapper _Mapper, IUtilsService _UtilService)
         {
             this.DbContext = _dbContext;
             this.Logger = _Logger;
             this.Mapper = _Mapper;
+            this.UtilsService = _UtilService;
         }
 
         [HttpGet]
@@ -36,6 +40,21 @@ namespace WebApiKalum.Controllers
             Logger.LogInformation("La consulta se ejecuto con exito");
             return Ok(aspirantes);
         }
+        [HttpGet("page/{page}")]
+        public async Task<ActionResult<IEnumerable<AspiranteListDTO>>>GetPaginacion(int page)
+        {
+            var queryable = this.DbContext.Aspirante.Include(a => a.Jornada).Include(a => a.CarreraTecnica).Include(a => a.ExamenAdmision).AsQueryable();
+            var paginacion = new HttpResponsePaginacion<Aspirante>(queryable,page);
+            if(paginacion.Content == null && paginacion.Content.Count == 0)
+            {
+                Logger.LogWarning("No existe carreras tecnicas");
+                return NoContent();
+            }
+            else
+            {
+                return Ok(paginacion);
+            }
+        }
 
         [HttpGet("{id}", Name="GetAspirante")]
         public async Task<ActionResult<Aspirante>> GetAspirante(string id)
@@ -52,7 +71,7 @@ namespace WebApiKalum.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Aspirante>> Post([FromBody] Aspirante value)/*viene del cuerpo de la peticion la informacion*//*detipo action result de tipo aspirante*/
+        public async Task<ActionResult<Aspirante>> Post([FromBody] AspiranteCreateDTO value)/*viene del cuerpo de la peticion la informacion*//*detipo action result de tipo aspirante*/
         {
             Logger.LogDebug("Iniciando proceso para almacenar un registro de aspirante");
 
@@ -67,6 +86,7 @@ namespace WebApiKalum.Controllers
             if(jornada == null)
             {
                 Logger.LogInformation($"No existe la jornada con el id {value.JornadaId}");
+                return BadRequest();
             }
 
             ExamenAdmision examenAdmision = await DbContext.ExamenAdmision.FirstOrDefaultAsync(e => e.ExamenId == value.ExamenId);
@@ -76,10 +96,21 @@ namespace WebApiKalum.Controllers
                 return BadRequest();
             }
 
-            await DbContext.Aspirante.AddAsync(value);
-            await DbContext.SaveChangesAsync();
-            Logger.LogInformation($"Se a creado el aspirante con exito");
-            return Ok(value);
+            bool result = await this.UtilsService.CrearExpedienteAsync(value);
+            CandidateRecordResponse candidateRecordResponse = new CandidateRecordResponse();
+            if(result)
+            {
+                candidateRecordResponse.Status = "Ok";
+                candidateRecordResponse.Mensaje = $"El proceso de solicitud del expediente fue creado exitosamente, pronto recibira su número de expediente al correo {value.Email}";
+            }
+            else 
+            {
+                candidateRecordResponse.Status = "Error";
+                candidateRecordResponse.Mensaje = $"Hubo un problema al crear la solicitud intente de nuevo o más tarde";                
+            }
+            Logger.LogInformation($"Se ha creato la solicitud del aspirante con exito");    
+            return Ok(candidateRecordResponse);            
+
         }
 
         [HttpPut("{id}")]

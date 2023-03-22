@@ -27,6 +27,7 @@ namespace WebApiKalum
             modelBuilder.Entity<CarreraTecnica>().ToTable("CarreraTecnica").HasKey(ct => new {ct.CarreraId});
             modelBuilder.Entity<ExamenAdmision>().ToTable("ExamenAdmision").HasKey(ea=> new {ea.ExamenId});
             modelBuilder.Entity<Aspirante>().ToTable("Aspirante").HasKey(a => new {a.NoExpediente});
+            modelBuilder.Entity<Aspirante>().ToTable("Aspirante").HasIndex(a => new {a.Email}).IsUnique();
             modelBuilder.Entity<Inscripcion>().ToTable("Inscripcion").HasKey(i => new {i.InscripcionId});
             modelBuilder.Entity<Alumno>().ToTable("Alumno").HasKey(a2 => new {a2.Carne});
             modelBuilder.Entity<Cargo>().ToTable("Cargo").HasKey(c => new {c.CargoId});

@@ -7,7 +7,7 @@ using RabbitMQ.Client;
 using WebApiKalum;
 using WebApiKalum.Dtos;
 using WebApiKalum.Entities;
-
+using WebApiKalum.Services;
 
 namespace WebApiKalum.Controllers
 {   
@@ -18,12 +18,15 @@ namespace WebApiKalum.Controllers
         private readonly KalumDbContext DbContext;
         private readonly ILogger<InscripcionController> Logger;
         private readonly IMapper Mapper;
+        public IUtilsService UtilsService{get;}
+        public IConfiguration Configuration {get;}
 
-        public InscripcionController(KalumDbContext _DbContext, ILogger<InscripcionController> _Logger, IMapper _Mapper)
+        public InscripcionController(KalumDbContext _DbContext, ILogger<InscripcionController> _Logger, IMapper _Mapper, IUtilsService _UtilsService)
         {
             this.Logger = _Logger;
             this.DbContext = _DbContext;
             this.Mapper = _Mapper;
+            this.UtilsService = _UtilsService;
         }
         [HttpPost("Enrollments")]
         public async Task<ActionResult<ResponseEnrollmentDTO>>EnrollmentCreateAsync([FromBody] EnrollmentDTO value)
@@ -31,16 +34,14 @@ namespace WebApiKalum.Controllers
             Aspirante aspirante = await DbContext.Aspirante.FirstOrDefaultAsync(a => a.NoExpediente == value.NoExpediente);
             if(aspirante == null)
             {
-                //
                 return NoContent();
-
             }
             CarreraTecnica carreraTecnica = await DbContext.CarreraTecnica.FirstOrDefaultAsync(ct => ct.CarreraId == value.CarreraId);
             if(carreraTecnica == null)
             {
                 return NoContent();
             }
-            bool respuesta = await CrearSolicitudAsync(value);
+            bool respuesta = await this.UtilsService.CrearSolicitudAsync(value);   
             if(respuesta == true)
             {
                 ResponseEnrollmentDTO response = new ResponseEnrollmentDTO();
@@ -58,20 +59,20 @@ namespace WebApiKalum.Controllers
         {
             bool proceso = false;
             ConnectionFactory factory = new ConnectionFactory();
-
             IConnection conexion = null;
             IModel channel = null;
-            factory.HostName = "LocalHost";
-            factory.VirtualHost="/";
-            factory.Port = 5672;
-            factory.UserName="guest";
-            factory.Password="guest";
+            factory.HostName = this.Configuration.GetValue<string>("RabbitConfiguration:HostName");;
+            factory.VirtualHost = this.Configuration.GetValue<string>("RabbitConfiguration:VirtualHost");;
+            factory.Port = this.Configuration.GetValue<int>("RabbitConfiguration:Port");
+            factory.UserName = this.Configuration.GetValue<string>("RabbitConfiguration:UserName");
+            factory.Password = this.Configuration.GetValue<string>("RabbitConfiguration:Password");
 
             try
             {
                 conexion = factory.CreateConnection();
                 channel = conexion.CreateModel();
-                channel.BasicPublish("kalum.exchange.enrollment","",null,Encoding.UTF8.GetBytes(JsonSerializer.Serialize(value)));
+                channel.BasicPublish("RabbitConfiguration:EnrollmentExchange","",null,Encoding.UTF8.GetBytes(JsonSerializer.Serialize(value)));
+                await Task.Delay(100);
                 proceso = true;
             }
             catch(Exception e)

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using WebApiKalum;
 using WebApiKalum.Dtos;
 using WebApiKalum.Entities;
+using WebApiKalum.Utilities;
 
 namespace WebApiKalum.Controllers
 {
@@ -36,6 +37,22 @@ namespace WebApiKalum.Controllers
             List<ExamenAdmisionGetDTO> resumen = Mapper.Map<List<ExamenAdmisionGetDTO>>(examenes);
             Logger.LogInformation("Se ejecuto la petición de forma exitosa.");
             return Ok(resumen);
+        }
+
+        [HttpGet("page/{page}")]
+        public async Task<ActionResult<IEnumerable<ExamenAdmision>>> GetPaginacion(int page)
+        {
+            var queryable = this.DbContext.ExamenAdmision.Include(ea => ea.Aspirantes).AsQueryable();
+            var paginacion =  new HttpResponsePaginacion<ExamenAdmision>(queryable, page);
+            if(paginacion.Content == null && paginacion.Content.Count == 0)
+            {
+                Logger.LogWarning("No existe examen admision");
+                return NoContent();
+            }
+            else
+            {
+                return Ok(paginacion);
+            }
         }
 
         [HttpGet("{id}", Name="GetExamenAdmision")]

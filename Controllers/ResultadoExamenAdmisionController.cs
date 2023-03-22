@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiKalum.Dtos;
 using WebApiKalum.Entities;
+using WebApiKalum.Utilities;
 
 namespace WebApiKalum.Controllers
 {
@@ -30,6 +31,22 @@ namespace WebApiKalum.Controllers
             }
             List<ResultadoExamenAdmisionListDTO> resumen = Mapper.Map<List<ResultadoExamenAdmisionListDTO>>(resultados);
             return Ok(resumen);
+        }
+
+        [HttpGet("page/{page}")]
+        public async Task<ActionResult<IEnumerable<ResultadoExamenAdmision>>> GetPaginacion(int page)
+        {
+            var queryable = this.DbContext.ResultadoExamenAdmision.Include(rea => rea.Aspirantes).AsQueryable();
+            var paginacion = new HttpResponsePaginacion<ResultadoExamenAdmision>(queryable,page);
+            if(paginacion.Content == null && paginacion.Content.Count == 0)
+            {
+                Logger.LogWarning("No existen Resultados de Examenes de admisión");
+                return NoContent();
+            }
+            else
+            {
+                return Ok(paginacion);
+            }
         }
         
         [HttpGet("{id}", Name="GetResultadoExamenAdmision")]
